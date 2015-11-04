@@ -114,6 +114,8 @@ def quit_event():
  
 def game_intro():
     intro = True
+    points = [(100, 50), (600, 50)]
+    meteor = points[0][0]
     while(intro):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -123,12 +125,15 @@ def game_intro():
         message_to_screen("Battle City 2015", green, -120, size = "large")
         message_to_screen("- shoot and destroy -", med_sea_green, -60)
         message_to_screen("Press P to pause during game play", black)
-        
+        if meteor <= points[1][0]:
+            pygame.draw.line(gameDisplay, red, (meteor, points[0][1]), (meteor + 5, points[1][1]))
+            meteor += 5
+            
         figure_play = (150, 500, 100, 50)
         button("Play", figure_play, med_sea_green, black, "play")
-        
         pygame.display.update()
-        clock.tick(5)
+        clock.tick(FPS)
+        
         
 def game_loop():
     global tank_x
