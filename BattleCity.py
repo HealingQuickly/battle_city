@@ -124,13 +124,6 @@ def game_intro():
         message_to_screen("- shoot and destroy -", med_sea_green, -60)
         message_to_screen("Press P to pause during game play", black)
         
-        # test area ##############################################################################
-        points = [(100, 50), (600, 50)]
-        meteor = points[0][0]
-        while meteor <= points[1][0]:
-            pygame.draw.line(gameDisplay, red, (meteor, points[0][1]), (meteor + 5, points[1][1]))
-            meteor += 5
-        
         figure_play = (150, 500, 100, 50)
         button("Play", figure_play, med_sea_green, black, "play")
         
