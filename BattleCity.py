@@ -37,10 +37,10 @@ smallfont = pygame.font.SysFont("comicsansms", 25)
 midfont = pygame.font.SysFont("comicsansms", 50)
 largefont = pygame.font.SysFont("comicsansms", 75)
 
-########### tank figure ###########
+########### [begin] tank figure ###########
 tank_width = 40
 tank_height = 20
-power_max = 300
+power_max = 100
 
 move_sound = pygame.mixer.Sound("move.wav")
 engine_sound = pygame.mixer.Sound("engine.wav")
@@ -48,7 +48,7 @@ engine_sound = pygame.mixer.Sound("engine.wav")
 # friendly tank position
 tank_x = display_width * 0.1
 tank_y = display_height * 0.9
-########### tank figure ###########
+########### [end] tank figure ###########
     
 def text_objects(text, color, size):
     if size == "small":
@@ -104,8 +104,15 @@ def tank(x, y):
         pygame.draw.circle(gameDisplay, green, (wheel, y + tank_height), tank_height / 4)
         wheel += tank_width / 8
 
-def fire(power):
+def fire(power, turret_pos):
     print ("shot a cannon with " + str(power) + " power")
+    
+    bullets = turret_pos[0]
+    while bullets <= display_width:
+        print ("prepare to draw")
+        pygame.draw.line(gameDisplay, red, (bullets, turret_pos[1]), (bullets + 5, turret_pos[1] + 5))
+        print ("Drew")
+        bullets += 10
     
         
 def quit_event():
@@ -114,8 +121,7 @@ def quit_event():
  
 def game_intro():
     intro = True
-    points = [(100, 50), (600, 50)]
-    meteor = points[0][0]
+    
     while(intro):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -125,10 +131,7 @@ def game_intro():
         message_to_screen("Battle City 2015", green, -120, size = "large")
         message_to_screen("- shoot and destroy -", med_sea_green, -60)
         message_to_screen("Press P to pause during game play", black)
-        if meteor <= points[1][0]:
-            pygame.draw.line(gameDisplay, red, (meteor, points[0][1]), (meteor + 5, points[1][1]))
-            meteor += 5
-            
+                    
         figure_play = (150, 500, 100, 50)
         button("Play", figure_play, med_sea_green, black, "play")
         pygame.display.update()
@@ -158,15 +161,18 @@ def game_loop():
                     pygame.mixer.Sound.play(move_sound)
                     tank_move = 5 
                     
+                # press SPACE to fire    
                 elif event.key == pygame.K_SPACE:
-                    power = 0.0001
+                    power = 0.001
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     pygame.mixer.Sound.stop(move_sound)
                     pygame.mixer.Sound.play(engine_sound, -1)
                     tank_move = 0
                 elif event.key == pygame.K_SPACE:
-                    fire(power)
+                    # release SPACE to fire
+                    fire(power, (tank_x, tank_y))
+                    print("here already")
                     power = 0
         tank_x += tank_move
         power += power
